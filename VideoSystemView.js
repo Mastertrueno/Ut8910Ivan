@@ -4,7 +4,7 @@ class VideoSystemgerView {
 		this.categories = $('#categories');
 		this.menu = $('.navbar-nav');
 		this.Videosystem = null;
-		this.windows=[];
+		this.windows = [];
 	}
 	#excecuteHandler(handler, handlerArguments, scrollElement, data, url, event) {
 		handler(...handlerArguments);
@@ -153,7 +153,7 @@ class VideoSystemgerView {
 	bindCloseWindow(handler) {
 		$('#closewindow').click((event) => {
 			console.log($('#closewindow'));
-console.log(this.windows);
+			console.log(this.windows);
 			console.log(event);
 			for (let index = 0; index < this.windows.length; index++) {
 				this.windows[index].closed;
@@ -161,7 +161,7 @@ console.log(this.windows);
 			}
 		});
 	}
-	
+
 
 	/* 	showDirectorsInMenu(directors) {//hace una lista en el menu
 			let li = $(`<li class="nav-item dropdown">
@@ -748,6 +748,122 @@ console.log(this.windows);
 			window.history.go(1);
 		});
 		bGoReload.after(bGoForward);
+	}
+	showAdminMenu() {
+		let li = $(`<li class="nav-item dropdown"> 
+		<a class="nav-link dropdown-toggle" href="#" id="navAdmin" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 
+		Administración </a> 
+		</li>`);
+		let container = $(`<div class="dropdown-menu" aria-labelledby="navAdmin"> 
+			<a id="lusuario" class="dropdown-item" href="#new-category">Usuario</</a> 
+		</div>`);
+		li.append(container); this.menu.append(li);
+	}
+	bindAdminMenu(hUser) {
+		$('#lusuario').click((event) => {
+			this.#excecuteHandler(hUser, [],
+				'#user', { action: 'User' },
+				'#', event);
+		});
+	}
+	bindUserForm(handler) {
+		userValidation(handler);
+	}
+	UserForm() {
+		this.main.empty();
+		if (this.categories.children().length > 1) this.categories.children()[1].remove();
+		let container = $(`<div id="user" class="container my-3"> <h1 class="display-5">Usuario</h1>
+			 <form name="fUser" role="form" novalidate> 
+			 <div class="form-row">
+					<div class="col-md-6 mb-3"> <label for="ncNombre">Nombre *</label>
+						<div class="input-group">
+							<div class="input-group-prepend"> <span class="input-group-text" id="nombrePrepend"><i
+										class="fas fa-heading"></i></span>
+							</div>
+							<input type="text" class="form-control" id="ncNombre" name="ncNombre" placeholder="Jose"
+								aria-describedby="nombrePrepend" value="" required>
+							<div class="invalid-feedback">
+								El Nombre es obligatorio.
+							</div>
+							<div class="valid-feedback">
+								Correcto.
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col-md-6 mb-3"> <label for="ncEmail">Email *</label>
+						<div class="input-group">
+							<div class="input-group-prepend"> <span class="input-group-text" id="emailPrepend"><i
+										class="fas fa-image"></i></span>
+							</div>
+							<input type="text" class="form-control" id="ncemail" name="ncemail" placeholder="Lirio"
+								aria-describedby="emailPrepend" value="" required>
+							<div class="invalid-feedback">
+								El email no es válido.
+							</div>
+							<div class="valid-feedback">
+								Correcto.
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col-md-6 mb-3"> <label for="ncContraseña">Contraseña *</label>
+						<div class="input-group">
+							<div class="input-group-prepend"> <span class="input-group-text" id="contraseñaPrepend"><i
+										class="fas fa-image"></i></span>
+							</div>
+							<input type="text" class="form-control" id="ncContraseña" name="ncContraseña" placeholder="Ramos"
+								aria-describedby="contraseñaPrepend" value="" required>
+							<div class="invalid-feedback">
+								El contraseña no es válida.
+							</div>
+							<div class="valid-feedback">
+								Correcto.
+							</div>
+						</div>
+					</div>
+				</div>
+				<button class="btn btn-primary" type="submit">Enviar</button>
+				<button class="btn btn-primary" type="reset">Cancelar</button>
+			</form>
+		</div>`);
+		this.main.append(container);
+	}
+	showUserModal(done, cat, error) {
+		$(document.fUser).find('div.error').remove();
+		if (done) {
+			let modal = $(`<div class="modal fade" id="UserModal" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="UserModalLabel" aria-hidden="true"> 
+			<div class="modal-dialog" role="document"> <div class="modal-content"> 
+				<div class="modal-header"> <h5 class="modal-title" id="UserModalLabel">Usuario creado</h5> 
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+						<span aria-hidden="true">&times;</span> </button>
+		 		</div>
+		  		<div class="modal-body"> 
+		  			El usuario <strong>${cat.Name}</strong> ha sido creado correctamente.
+		   		</div>
+		    	<div class="modal-footer"> 
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button> 
+				</div> 
+			</div>
+		</div>
+		</div>`);
+			$('body').append(modal);
+			let UserModal = $('#UserModal');
+			UserModal.modal('show');
+			UserModal.find('button').click(() => {
+				UserModal.on('hidden.bs.modal', function (event) {
+					document.fUser.reset();
+					document.fUser.ncName.focus();
+					this.remove();
+				}); UserModal.modal('hide');
+			})
+		} else {
+			$(document.fUser).prepend(`<div class="error text-danger p-3">
+			<i class="fas fa-exclamation-triangle"></i> El Usuario <strong>${cat.Name}</strong> ya está creada.
+			</div>`);
+		}
 	}
 }
 export default VideoSystemgerView;

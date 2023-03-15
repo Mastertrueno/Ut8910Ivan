@@ -11,6 +11,7 @@ class VideoSystemController {
 
         let user = new User("Lu", "lume@gmail.com", "12345678");
         let user2 = new User("Mi", "lum@gmail.com", "12345678");
+        let user3 = new User("admin", "admin@gmail.com", "admin123");
 
         let act = new Person("Paco", "Mambo", "Reyes", "5/02/1993", "");
         let act2 = new Person("Rosa", "Lanza", "Torres", "17/11/1980", "");
@@ -51,6 +52,7 @@ class VideoSystemController {
         let Videosystem = this.#Videosystem;
         Videosystem.addUser(user);
         Videosystem.addUser(user2);
+        Videosystem.addUser(user3);
 
         Videosystem.addActor(act);
         Videosystem.addActor(act2);
@@ -179,6 +181,8 @@ class VideoSystemController {
             this.handleAletProductionList
         );
         this.onAddCategory();
+        this.#VideoSystemView.showAdminMenu();
+        this.#VideoSystemView.bindAdminMenu(this.handleUserForm);
         history.replaceState({ action: 'init' }, null);
     }
     onInit = () => {
@@ -719,6 +723,25 @@ class VideoSystemController {
         } catch (error) {
             this.#VideoSystemView.showProductInNewWindow(null, 'No existe este producto en la página.');
         }
+    }
+    handleUserForm = () => {
+        this.#VideoSystemView.UserForm();
+        //this.#VideoSystemView.bindNewPeliculaForm(handler)(newPeliValidation(handler));
+        this.#VideoSystemView.bindUserForm(this.handleUser);
+    }
+    handleUser = (name, lastname1, lastname2, born, image) => {
+        let per = new Person(name, lastname1, lastname2, born, image);
+        let done, error;
+        //console.log(tipo);
+        try {
+            this.#Videosystem.addUser(per);
+            done = true;
+        } catch (exception) {
+            done = false; error = exception;
+        }
+        console.log(done);
+        this.#VideoSystemView.showUserModal(done, per, error);
+        this.onAddCategory();
     }
 }
 export default VideoSystemController;
