@@ -20,7 +20,6 @@ function defaultCheckElement(event) {
 
 function userValidation(handler) {
     console.log(document.forms);
-    document.forms.fUser;
     let form = document.forms.fUser;
     console.log(handler);
     console.log(form);
@@ -28,8 +27,6 @@ function userValidation(handler) {
     $(form).submit(function (event) {
         let isValid = true;
         let firstInvalidElement = null;
-        this.ncImagen.value = this.ncImagen.value.trim();
-        showFeedBack($(this.ncImagen), true);
 
         if (!this.ncNombre.checkValidity()) {
             isValid = false;
@@ -38,32 +35,26 @@ function userValidation(handler) {
         } else {
             showFeedBack($(this.ncNombre), true);
         }
-        if (!this.ncApellido1.checkValidity()) {
+        if (!this.ncEmail.checkValidity()) {
             isValid = false;
-            showFeedBack($(this.ncApellido1), false);
-            firstInvalidElement = this.ncApellido1;
+            showFeedBack($(this.ncEmail), false);
+            firstInvalidElement = this.ncEmail;
         } else {
-            showFeedBack($(this.ncApellido1), true);
+            showFeedBack($(this.ncEmail), true);
         }
-        if (!this.ncApellido2.checkValidity()) {
+        if (!this.ncContraseña.checkValidity()) {
             isValid = false;
-            showFeedBack($(this.ncApellido2), false);
-            firstInvalidElement = this.ncApellido2;
+            showFeedBack($(this.ncContraseña), false);
+            firstInvalidElement = this.ncContraseña;
         } else {
-            showFeedBack($(this.ncApellido2), true);
+            showFeedBack($(this.ncContraseña), true);
         }
-        if (!this.ncBorn.checkValidity()) {
-            isValid = false;
-            showFeedBack($(this.ncBorn), false);
-            firstInvalidElement = this.ncBorn;
-        } else {
-            showFeedBack($(this.ncBorn), true);
-        }
+
         
         if (!isValid) {
             firstInvalidElement.focus();
         } else {
-            handler(this.ncNombre.value, this.ncApellido1.value, this.ncApellido2.value, this.ncBorn.value, this.ncImagen.value);
+            handler(this.ncNombre.value, this.ncEmail.value, this.ncContraseña.value);
         } event.preventDefault();
         event.stopPropagation();
     });
@@ -74,8 +65,7 @@ function userValidation(handler) {
 		inputs.removeClass('is-valid is-invalid');
 	}));
     $(form.ncNombre).change(defaultCheckElement);
-    $(form.ncApellido1).change(defaultCheckElement);
-    $(form.ncApellido2).change(defaultCheckElement);
-    $(form.ncBorn).change(defaultCheckElement);
+    $(form.ncEmail).change(defaultCheckElement);
+    $(form.ncContraseña).change(defaultCheckElement);
 
 }

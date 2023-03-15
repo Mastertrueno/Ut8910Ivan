@@ -124,7 +124,7 @@ class Serie extends Production {
 class User {
     Username;
     Email;
-    #Password;
+    Password;
     constructor(username, email, password) {
         if (!username) throw new InvalidValueException("username", username);
         if (!email) throw new InvalidValueException("email", email);
@@ -134,7 +134,7 @@ class User {
         if (!/[a-zA-Z0-9]{8}/.test(password)) throw new InvalidValueException("password", password);
         this.Username = username;
         this.Email = email;
-        this.#Password = password;
+        this.Password = password;
 
     }
 }

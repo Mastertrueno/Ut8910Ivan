@@ -240,6 +240,8 @@ class VideoSystemgerView {
 				</figure>
 			</div>
 			`);
+			let favo=$(`<button id="favorito" name="${product.Title}">Añadir a favoritos</button>`);
+			container.append(favo);
 		container.children().first().append(div);
 		/* for (let actor of Videosystem.actors) {
 			console.log(actor);
@@ -749,6 +751,7 @@ class VideoSystemgerView {
 		});
 		bGoReload.after(bGoForward);
 	}
+	//loguear admin
 	showAdminMenu() {
 		let li = $(`<li class="nav-item dropdown"> 
 		<a class="nav-link dropdown-toggle" href="#" id="navAdmin" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 
@@ -769,6 +772,7 @@ class VideoSystemgerView {
 	bindUserForm(handler) {
 		userValidation(handler);
 	}
+
 	UserForm() {
 		this.main.empty();
 		if (this.categories.children().length > 1) this.categories.children()[1].remove();
@@ -797,7 +801,7 @@ class VideoSystemgerView {
 							<div class="input-group-prepend"> <span class="input-group-text" id="emailPrepend"><i
 										class="fas fa-image"></i></span>
 							</div>
-							<input type="text" class="form-control" id="ncemail" name="ncemail" placeholder="Lirio"
+							<input type="email" class="form-control" id="ncemail" name="ncEmail" placeholder="Lirio"
 								aria-describedby="emailPrepend" value="" required>
 							<div class="invalid-feedback">
 								El email no es válido.
@@ -814,7 +818,7 @@ class VideoSystemgerView {
 							<div class="input-group-prepend"> <span class="input-group-text" id="contraseñaPrepend"><i
 										class="fas fa-image"></i></span>
 							</div>
-							<input type="text" class="form-control" id="ncContraseña" name="ncContraseña" placeholder="Ramos"
+							<input type="password" class="form-control" id="ncContraseña" name="ncContraseña" placeholder="Ramos"
 								aria-describedby="contraseñaPrepend" value="" required>
 							<div class="invalid-feedback">
 								El contraseña no es válida.
@@ -831,8 +835,80 @@ class VideoSystemgerView {
 		</div>`);
 		this.main.append(container);
 	}
+	HolaAdmin() {
+		this.main.empty();
+		if (this.categories.children().length > 1) this.categories.children()[1].remove();
+		let container = $(`<h1>Hola admin</h1>`);
+		this.main.append(container);
+	}
+	showCloseAdmin() {
+		let li = $(`<li class="nav-item "> 
+		<a class="nav-link" href="#" id="closeadmin" role="button"  aria-haspopup="true" aria-expanded="false"> 
+		Cerrar Sesion </a> 
+		</li>`);
+
+		this.menu.append(li);
+	}
+	bindCloseAdmin() {
+		$('#closeadmin').click((event) => {
+			console.log($('#closeadmin'));
+			console.log(event);
+			document.cookie="User=Admin; expires=Thu, 18 Dec 2013 12:00:00 UTC";
+		});
+	}
+	//manejar favoritos
+	bindFav(handler) {
+		console.log(handler);
+		 $('#favorito').click((event)=> {
+			let nombre=$("h1").get(1).innerHTML;
+			console.log(nombre);
+			return nombre;
+		}); 
+	}
+	showFavoritosInMenu() {
+		let li = $(`<li class="nav-item ">
+			<a class="nav-link " href="#" id="navFavorito" role="button" data-fav="Favoritos" aria-haspopup="true" aria-expanded="false">
+				Favoritos
+			</a>
+			</li>`);
+		this.menu.append(li);
+	}
+	bindFavoritosInMenu(handler) {
+		console.log();
+		$('#navFavorito').click((event) => {
+			let favo = $(event.target).closest($('a')).get(0).dataset.type;
+			this.#excecuteHandler(
+				handler, [favo],
+				'#favoritos',
+				{ action: 'favoritos', data: favo },
+				'#favoritos', event
+			);
+		});
+	}
+	showFavorites(favoritos) {
+		this.main.empty();
+		console.log(favoritos);
+		let container = $(`<div id="fav-list" class="container my-3"><div class="row"> </div></div>`);
+		//let product = production.next();
+		//for (let index = 0; index < actors.length; index++) {
+			for (let index = 0; index < favoritos.length; index++) {
+			//console.log(actor[0]);
+			let div = $(`<div class="col-md-4">
+				<figure class="card card-actor-grid card-lg"> <a data-fav="${favoritos[index]}" href="#single-actor" class="img-wrap"></a>
+					
+					
+				</figure>
+			</div>`);
+			div.prepend(`<h2>${favoritos[index]}</h2>`)
+		}
+		//product = production.next();
+
+		container.prepend(`<h1>Favoritos</h1>`);
+		this.main.append(container);
+	}
 	showUserModal(done, cat, error) {
 		$(document.fUser).find('div.error').remove();
+		console.log(cat);
 		if (done) {
 			let modal = $(`<div class="modal fade" id="UserModal" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="UserModalLabel" aria-hidden="true"> 
 			<div class="modal-dialog" role="document"> <div class="modal-content"> 
@@ -841,7 +917,7 @@ class VideoSystemgerView {
 						<span aria-hidden="true">&times;</span> </button>
 		 		</div>
 		  		<div class="modal-body"> 
-		  			El usuario <strong>${cat.Name}</strong> ha sido creado correctamente.
+		  			El usuario <strong>${cat.Username}</strong> ha sido creado correctamente.
 		   		</div>
 		    	<div class="modal-footer"> 
 					<button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button> 
@@ -855,13 +931,14 @@ class VideoSystemgerView {
 			UserModal.find('button').click(() => {
 				UserModal.on('hidden.bs.modal', function (event) {
 					document.fUser.reset();
-					document.fUser.ncName.focus();
+					document.fUser.ncNombre.focus();
 					this.remove();
 				}); UserModal.modal('hide');
 			})
+
 		} else {
 			$(document.fUser).prepend(`<div class="error text-danger p-3">
-			<i class="fas fa-exclamation-triangle"></i> El Usuario <strong>${cat.Name}</strong> ya está creada.
+			<i class="fas fa-exclamation-triangle"></i> El Usuario <strong>${cat.Username}</strong> ya está creada.
 			</div>`);
 		}
 	}
